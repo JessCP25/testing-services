@@ -3,6 +3,7 @@ import { ProductsService } from "./product.service";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { Product } from "../models/product.model";
 import { environment } from "../../environments/environment";
+import { generateManyProducts } from "../models/product.mock";
 
 
 fdescribe('Product Service', () => {
@@ -24,8 +25,10 @@ fdescribe('Product Service', () => {
 
   describe('test for getAllSimple', () => {
     it('should be return list product', (doneFn)=>{
-      const mockData: Product[] = [];
-      productService.getAllSimple().subscribe((res)=> {
+      const mockData: Product[] = generateManyProducts(2);
+      productService.getAllSimple().subscribe((data)=> {
+        expect(data.length).toEqual(mockData.length);
+        expect(data).toEqual(mockData);
         doneFn();
       });
       const url = `${environment.API_URL}/api/v1/products`
