@@ -50,6 +50,22 @@ fdescribe('Product Service', () => {
       req.flush(mockData);
       httpController.verify()
     })
+    it('should send limit 10 and offset 3', (doneFn)=>{
+      const mockData: Product[] = generateManyProducts(3);
+      const limit = 10;
+      const offset = 3;
+      productService.getAll(limit, offset).subscribe((data)=> {
+        expect(data.length).toEqual(mockData.length);
+        doneFn();
+      });
+      const url = `${environment.API_URL}/api/v1/products?limit=${limit}&offset=${offset}`
+      const req = httpController.expectOne(url);
+      req.flush(mockData);
+      const params = req.request.params;
+      expect(params.get('limit')).toEqual(`${limit}`);
+      expect(params.get('offset')).toEqual(`${offset}`);
+      httpController.verify()
+    })
     it('should be return list product with taxes', (doneFn)=>{
       const mockData: Product[] = [
         {
@@ -59,12 +75,23 @@ fdescribe('Product Service', () => {
         {
           ...generateOneProduct(),
           price: 200, // 38
+        },
+        {
+          ...generateOneProduct(),
+          price: 0, // 0
+        },
+        {
+          ...generateOneProduct(),
+          price: -100, // 0
         }
       ];
       productService.getAll().subscribe((data)=> {
         expect(data.length).toEqual(mockData.length);
         expect(data[0].taxes).toEqual(19);
         expect(data[1].taxes).toEqual(38);
+        expect(data[2].taxes).toEqual(0);
+        expect(data[3].taxes).toEqual(0);
+
         doneFn();
       });
       const url = `${environment.API_URL}/api/v1/products`
