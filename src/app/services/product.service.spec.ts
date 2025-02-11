@@ -10,6 +10,7 @@ import {
   generateManyProducts,
   generateOneProduct,
 } from '../models/product.mock';
+import { HttpStatusCode } from '@angular/common/http';
 
 fdescribe('Product Service', () => {
   let productService: ProductsService;
@@ -105,6 +106,28 @@ fdescribe('Product Service', () => {
       req.flush(mockData);
     });
   });
+
+  describe('test for getOne', ()=>{
+    it('should return a error 404', (doneFn) =>{
+      const productId = '1';
+      const msgError = '404 message';
+      const mockError = {
+        status: HttpStatusCode.NotFound,
+        statusText: msgError
+      }
+
+      productService.getOne(productId).subscribe({error: (error)=>{
+        expect(error).toEqual('El producto no existe');
+        doneFn();
+      }})
+
+      const url =`${environment.API_URL}/api/v1/products/${productId}`;;
+      const req = httpController.expectOne(url);
+      req.flush(msgError, mockError);
+      expect(req.request.method).toEqual('GET');
+      expect(req.request.url).toContain(productId);
+    })
+  })
 
   describe('test for create', () => {
     it('should return a new product', (doneFn) => {
