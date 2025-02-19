@@ -9,6 +9,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'person',
+    loadComponent: () =>
+      import('./components/person/person.component').then(
+        (c) => c.PersonComponent
+      ),
+  },
+  {
     path: 'pico-preview',
     loadComponent: () =>
       import('./components/pico-preview/pico-preview.component').then(
