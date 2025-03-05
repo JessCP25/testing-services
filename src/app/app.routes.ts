@@ -9,10 +9,10 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'person',
+    path: 'people',
     loadComponent: () =>
-      import('./components/person/person.component').then(
-        (c) => c.PersonComponent
+      import('./components/people/people.component').then(
+        (c) => c.PeopleComponent
       ),
   },
   {

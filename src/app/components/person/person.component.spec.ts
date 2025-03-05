@@ -68,4 +68,28 @@ fdescribe('PersonComponent', () => {
 
     expect(h3Element?.textContent).toEqual(messageCompare)
   });
+
+
+  it('should have <button> with call calcImc()', () => {
+    component.person = new Person('Jose', 'Payano', 25, 130, 1.75);
+    const messageCompare = `overweigth level 3`
+    const buttonElement: HTMLElement = fixture.debugElement.query(By.css('button.button-imc')).nativeElement;
+    // Act
+    component.calcImc();
+    fixture.detectChanges();
+
+    expect(buttonElement?.textContent).toContain(messageCompare)
+  });
+
+  it('should have <button> click', () => {
+    component.person = new Person('Jose', 'Payano', 25, 130, 1.75);
+    const messageCompare = `overweigth level 3`
+    const debugElement: DebugElement = fixture.debugElement.query(By.css('button.button-imc'));
+    const buttonElement: HTMLElement = debugElement.nativeElement;
+    // Act
+    debugElement.triggerEventHandler('click', null);
+    fixture.detectChanges();
+
+    expect(buttonElement?.textContent).toContain(messageCompare)
+  });
 });
